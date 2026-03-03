@@ -8,9 +8,22 @@ export interface BrowserSession {
   createdAt: number;
 }
 
+export interface SessionTimings {
+  platformApiTime: number;
+  cdpConnectTime: number;
+  contextInitTime: number;
+  totalTime: number;
+}
+
+export interface SessionWithTimings {
+  session: BrowserSession;
+  timings: SessionTimings;
+}
+
 export interface BrowserProvider {
   readonly name: string;
   createSession(): Promise<BrowserSession>;
+  createSessionWithTimings?(): Promise<SessionWithTimings>;
   destroySession(session: BrowserSession): Promise<void>;
   healthCheck(): Promise<boolean>;
 }

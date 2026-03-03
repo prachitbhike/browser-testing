@@ -1,7 +1,7 @@
 import type { MetricName, MetricSample } from '../types/metrics.js';
 import { Timer } from '../utils/timer.js';
 
-type MetricUnit = 'ms' | 'MB' | '%' | 'sessions/s';
+type MetricUnit = 'ms' | 'MB' | '%' | 'sessions/s' | 'pages/s';
 
 const METRIC_UNITS: Record<MetricName, MetricUnit> = {
   session_startup: 'ms',
@@ -16,6 +16,13 @@ const METRIC_UNITS: Record<MetricName, MetricUnit> = {
   total_iteration: 'ms',
   cpu_usage_percent: '%',
   memory_usage_mb: 'MB',
+  platform_api_time: 'ms',
+  cdp_connect_time: 'ms',
+  context_init_time: 'ms',
+  extraction_time: 'ms',
+  screenshot_time: 'ms',
+  render_complete_time: 'ms',
+  extraction_throughput: 'pages/s',
 };
 
 export class MetricsCollector {

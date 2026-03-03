@@ -129,6 +129,11 @@ export class BenchmarkRunner {
           metricsMap.set(metricName, summarize(values));
         }
 
+        const successCount = this.config.iterations - errors.length;
+        const successRate = this.config.iterations > 0
+          ? successCount / this.config.iterations
+          : 0;
+
         results.push({
           scenarioName: scenario.name,
           providerName: provider.name,
@@ -137,6 +142,7 @@ export class BenchmarkRunner {
           systemSnapshots: allSnapshots,
           iterationCount: this.config.iterations,
           errors,
+          successRate,
         });
       }
     }

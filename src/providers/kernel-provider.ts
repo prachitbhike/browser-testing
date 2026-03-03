@@ -14,7 +14,7 @@ export class KernelProvider extends BaseProvider {
   }
 
   protected async createPlatformSession(): Promise<PlatformSession> {
-    const browser = await this.client.browsers.create();
+    const browser = await this.client.browsers.create({ headless: true });
     return {
       cdpUrl: browser.cdp_ws_url,
       platformSessionId: browser.session_id,
@@ -31,7 +31,7 @@ export class KernelProvider extends BaseProvider {
 
   async healthCheck(): Promise<boolean> {
     try {
-      const browser = await this.client.browsers.create();
+      const browser = await this.client.browsers.create({ headless: true });
       await this.client.browsers.deleteByID(browser.session_id);
       return true;
     } catch (err) {

@@ -10,12 +10,19 @@ export type MetricName =
   | 'concurrent_throughput'
   | 'total_iteration'
   | 'cpu_usage_percent'
-  | 'memory_usage_mb';
+  | 'memory_usage_mb'
+  | 'platform_api_time'
+  | 'cdp_connect_time'
+  | 'context_init_time'
+  | 'extraction_time'
+  | 'screenshot_time'
+  | 'render_complete_time'
+  | 'extraction_throughput';
 
 export interface MetricSample {
   name: MetricName;
   value: number;
-  unit: 'ms' | 'MB' | '%' | 'sessions/s';
+  unit: 'ms' | 'MB' | '%' | 'sessions/s' | 'pages/s';
   timestamp: number;
 }
 
@@ -34,6 +41,8 @@ export interface StatisticalSummary {
   max: number;
   stdDev: number;
   count: number;
+  ciLower: number;
+  ciUpper: number;
 }
 
 export interface ScenarioResult {
@@ -44,6 +53,7 @@ export interface ScenarioResult {
   systemSnapshots: SystemSnapshot[];
   iterationCount: number;
   errors: string[];
+  successRate: number;
 }
 
 export interface BenchmarkReport {
@@ -68,6 +78,7 @@ export interface SerializableScenarioResult {
   systemSnapshots: SystemSnapshot[];
   iterationCount: number;
   errors: string[];
+  successRate: number;
 }
 
 export interface SerializableBenchmarkReport {

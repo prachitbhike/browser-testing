@@ -6,6 +6,11 @@ import { MultiPageCrawlScenario } from './multi-page-crawl.js';
 import { FileDownloadScenario } from './file-download.js';
 import { ConcurrentSessionsScenario } from './concurrent-sessions.js';
 import { LongRunningSessionScenario } from './long-running-session.js';
+import { WebScrapingScenario } from './web-scraping.js';
+import { AuthenticatedWorkflowScenario } from './authenticated-workflow.js';
+import { ScreenshotGenerationScenario } from './screenshot-generation.js';
+import { JavascriptHeavyPageScenario } from './javascript-heavy-page.js';
+import { DataExtractionPipelineScenario } from './data-extraction-pipeline.js';
 
 const SCENARIOS: Scenario[] = [
   new SimpleNavigationScenario(),
@@ -15,6 +20,11 @@ const SCENARIOS: Scenario[] = [
   new FileDownloadScenario(),
   new ConcurrentSessionsScenario(),
   new LongRunningSessionScenario(),
+  new WebScrapingScenario(),
+  new AuthenticatedWorkflowScenario(),
+  new ScreenshotGenerationScenario(),
+  new JavascriptHeavyPageScenario(),
+  new DataExtractionPipelineScenario(),
 ];
 
 export function getAllScenarios(): Scenario[] {

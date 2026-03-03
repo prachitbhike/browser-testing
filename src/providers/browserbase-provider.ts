@@ -19,6 +19,12 @@ export class BrowserbaseProvider extends BaseProvider {
   protected async createPlatformSession(): Promise<PlatformSession> {
     const session = await this.client.sessions.create({
       projectId: this.projectId,
+      region: 'us-east-1',
+      browserSettings: {
+        logSession: false,
+        recordSession: false,
+        solveCaptchas: false,
+      },
     });
     return {
       cdpUrl: session.connectUrl!,
@@ -40,6 +46,12 @@ export class BrowserbaseProvider extends BaseProvider {
     try {
       const session = await this.client.sessions.create({
         projectId: this.projectId,
+        region: 'us-east-1',
+        browserSettings: {
+          logSession: false,
+          recordSession: false,
+          solveCaptchas: false,
+        },
       });
       await this.client.sessions.update(session.id, {
         status: 'REQUEST_RELEASE',

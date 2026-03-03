@@ -57,10 +57,22 @@ export class IterationRunner {
       // Normal flow: create session, run scenario, teardown
       collector.startTimer('total_iteration');
 
-      // Session startup
+      // Session startup with sub-metric decomposition
       collector.startTimer('session_startup');
-      session = await provider.createSession();
-      collector.stopTimer('session_startup');
+
+      if (provider.createSessionWithTimings) {
+        const result = await provider.createSessionWithTimings();
+        session = result.session;
+        collector.stopTimer('session_startup');
+
+        // Record sub-metrics
+        collector.record('platform_api_time', result.timings.platformApiTime);
+        collector.record('cdp_connect_time', result.timings.cdpConnectTime);
+        collector.record('context_init_time', result.timings.contextInitTime);
+      } else {
+        session = await provider.createSession();
+        collector.stopTimer('session_startup');
+      }
 
       // Run scenario
       const context: ScenarioContext = {

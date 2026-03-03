@@ -17,7 +17,7 @@ describe('provider factory', () => {
 describe('scenario registry', () => {
   it('lists all scenarios', () => {
     const scenarios = getAllScenarios();
-    expect(scenarios.length).toBe(7);
+    expect(scenarios.length).toBe(12);
   });
 
   it('gets scenario by name', () => {
@@ -38,5 +38,10 @@ describe('scenario registry', () => {
     expect(names).toContain('file-download');
     expect(names).toContain('concurrent-sessions');
     expect(names).toContain('long-running-session');
+    expect(names).toContain('web-scraping');
+    expect(names).toContain('authenticated-workflow');
+    expect(names).toContain('screenshot-generation');
+    expect(names).toContain('javascript-heavy-page');
+    expect(names).toContain('data-extraction-pipeline');
   });
 });

@@ -5,8 +5,8 @@ import { getScenarioNames } from './scenarios/index.js';
 const DEFAULTS: BenchmarkConfig = {
   providers: getAvailableProviders(),
   scenarios: ['all'],
-  iterations: 5,
-  warmupIterations: 1,
+  iterations: 10,
+  warmupIterations: 3,
   concurrency: 3,
   timeout: 60_000,
   outputDir: 'reports',

@@ -27,6 +27,26 @@ describe('MetricsCollector', () => {
     expect(samples[2].unit).toBe('MB');
   });
 
+  it('records new metric names with correct units', () => {
+    const collector = new MetricsCollector();
+    collector.record('platform_api_time', 100);
+    collector.record('cdp_connect_time', 50);
+    collector.record('context_init_time', 20);
+    collector.record('extraction_time', 30);
+    collector.record('screenshot_time', 200);
+    collector.record('render_complete_time', 150);
+    collector.record('extraction_throughput', 3.5);
+
+    const samples = collector.getSamples();
+    expect(samples[0].unit).toBe('ms');   // platform_api_time
+    expect(samples[1].unit).toBe('ms');   // cdp_connect_time
+    expect(samples[2].unit).toBe('ms');   // context_init_time
+    expect(samples[3].unit).toBe('ms');   // extraction_time
+    expect(samples[4].unit).toBe('ms');   // screenshot_time
+    expect(samples[5].unit).toBe('ms');   // render_complete_time
+    expect(samples[6].unit).toBe('pages/s'); // extraction_throughput
+  });
+
   it('starts and stops timers', async () => {
     const collector = new MetricsCollector();
     collector.startTimer('session_startup');
