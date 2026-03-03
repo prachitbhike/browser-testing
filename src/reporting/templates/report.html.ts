@@ -40,9 +40,11 @@ export function generateReportHtml(report: SerializableBenchmarkReport): string 
 </head>
 <body>
 <h1>Browser Benchmark Report</h1>
-<p class="meta">Run: ${report.runId} &bull; ${report.timestamp} &bull; Duration: ${(report.duration / 1000).toFixed(1)}s &bull; Iterations: ${report.config.iterations} (warmup: ${report.config.warmupIterations})</p>
+<p class="meta">Run: ${report.runId} &bull; ${report.timestamp} &bull; Duration: ${(report.duration / 1000).toFixed(1)}s &bull; Iterations: ${report.config.iterations} (warmup: ${report.config.warmupIterations}) &bull; Mode: ${report.config.mode === 'default' ? 'Default (out-of-the-box)' : 'Raw (features disabled, region-matched)'}</p>
 
 <div class="provider-colors" id="legend"></div>
+
+<div class="card" id="featureMatrixCard" style="margin-bottom:1.5rem;"></div>
 
 <h2>Per-Scenario Comparison</h2>
 <div class="grid" id="scenarioCharts"></div>
@@ -151,6 +153,36 @@ REPORT.config.providers.forEach(p => {
   item.innerHTML = '<div class="legend-dot" style="background:' + getColor(p, 'border') + '"></div>' + p;
   legend.appendChild(item);
 });
+
+// Feature matrix
+(function buildFeatureMatrix() {
+  const features = REPORT.providerFeatures;
+  if (!features || Object.keys(features).length === 0) {
+    document.getElementById('featureMatrixCard').style.display = 'none';
+    return;
+  }
+  const featureLabels = [
+    { key: 'sessionRecording', label: 'Session Recording' },
+    { key: 'captchaSolving', label: 'CAPTCHA Solving' },
+    { key: 'sessionLogging', label: 'Session Logging' },
+    { key: 'advancedStealth', label: 'Advanced Stealth' },
+    { key: 'adBlocking', label: 'Ad Blocking' },
+    { key: 'proxy', label: 'Proxy' },
+  ];
+  let html = '<h3>Active Features (this run)</h3><table><thead><tr><th>Feature</th>';
+  providers.forEach(p => { html += '<th>' + p + '</th>'; });
+  html += '</tr></thead><tbody>';
+  featureLabels.forEach(f => {
+    html += '<tr><td>' + f.label + '</td>';
+    providers.forEach(p => {
+      const val = features[p] && features[p][f.key];
+      html += '<td style="color:' + (val ? '#4ade80' : '#64748b') + '">' + (val ? 'ON' : 'off') + '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  document.getElementById('featureMatrixCard').innerHTML = html;
+})();
 
 // Group results by scenario
 const scenarios = [...new Set(REPORT.results.map(r => r.scenarioName))];

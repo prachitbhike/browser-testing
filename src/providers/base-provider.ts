@@ -1,5 +1,6 @@
 import { chromium, type Browser, type Page } from 'playwright-core';
-import type { BrowserProvider, BrowserSession, SessionWithTimings } from '../types/provider.js';
+import type { BrowserProvider, BrowserSession, ProviderFeatures, SessionWithTimings } from '../types/provider.js';
+import type { BenchmarkMode } from '../types/config.js';
 import { Timer } from '../utils/timer.js';
 import { logger } from '../utils/logger.js';
 import { retry } from '../utils/retry.js';
@@ -11,10 +12,16 @@ export interface PlatformSession {
 
 export abstract class BaseProvider implements BrowserProvider {
   abstract readonly name: string;
+  readonly mode: BenchmarkMode;
+
+  constructor(mode: BenchmarkMode = 'raw') {
+    this.mode = mode;
+  }
 
   protected abstract createPlatformSession(): Promise<PlatformSession>;
   protected abstract destroyPlatformSession(platformSessionId: string): Promise<void>;
   abstract healthCheck(): Promise<boolean>;
+  abstract getEnabledFeatures(): ProviderFeatures;
 
   async createSessionWithTimings(): Promise<SessionWithTimings> {
     const totalTimer = new Timer();

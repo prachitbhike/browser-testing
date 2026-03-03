@@ -1,5 +1,6 @@
 import type { Page } from 'playwright-core';
 import type { MetricSample } from './metrics.js';
+import type { BenchmarkMode } from './config.js';
 
 export interface ScenarioContext {
   page: Page;
@@ -8,6 +9,7 @@ export interface ScenarioContext {
   config: {
     concurrency: number;
     timeout: number;
+    mode: BenchmarkMode;
   };
 }
 

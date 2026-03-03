@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid';
 import cliProgress from 'cli-progress';
 import chalk from 'chalk';
 import type { BenchmarkConfig } from '../types/config.js';
-import type { BenchmarkReport, MetricName, MetricSample, ScenarioResult, SystemSnapshot } from '../types/metrics.js';
+import type { BenchmarkReport, MetricName, MetricSample, ProviderFeaturesInfo, ScenarioResult, SystemSnapshot } from '../types/metrics.js';
 import type { BrowserProvider } from '../types/provider.js';
 import type { Scenario } from '../types/scenario.js';
 import { createProvider } from '../providers/index.js';
@@ -24,6 +24,7 @@ export class BenchmarkRunner {
     const startTime = Date.now();
 
     logger.info(`Starting benchmark run ${chalk.bold(runId)}`);
+    logger.info(`Mode: ${chalk.yellow(this.config.mode)}`);
     logger.info(`Providers: ${chalk.cyan(this.config.providers.join(', '))}`);
     logger.info(`Scenarios: ${chalk.magenta(this.config.scenarios.join(', '))}`);
     logger.info(`Iterations: ${this.config.iterations} (warmup: ${this.config.warmupIterations})`);
@@ -32,11 +33,17 @@ export class BenchmarkRunner {
     const providers: BrowserProvider[] = [];
     for (const name of this.config.providers) {
       try {
-        providers.push(createProvider(name));
+        providers.push(createProvider(name, this.config.mode));
       } catch (err) {
         logger.error(`Failed to create provider "${name}": ${err}`);
         throw err;
       }
+    }
+
+    // Collect provider features
+    const providerFeatures: Record<string, ProviderFeaturesInfo> = {};
+    for (const provider of providers) {
+      providerFeatures[provider.name] = provider.getEnabledFeatures();
     }
 
     // Health check all providers
@@ -161,7 +168,9 @@ export class BenchmarkRunner {
         iterations: this.config.iterations,
         warmupIterations: this.config.warmupIterations,
         concurrency: this.config.concurrency,
+        mode: this.config.mode,
       },
+      providerFeatures,
       results,
       duration,
     };

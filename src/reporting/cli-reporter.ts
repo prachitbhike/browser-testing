@@ -119,8 +119,16 @@ export class CliReporter {
   print(report: BenchmarkReport): void {
     console.log('\n');
     console.log(chalk.bold.underline(`Benchmark Report — Run ${report.runId}`));
-    console.log(chalk.gray(`${report.timestamp} • Duration: ${(report.duration / 1000).toFixed(1)}s`));
+    const modeLabel = report.config.mode === 'default'
+      ? chalk.yellow('default (out-of-the-box provider settings)')
+      : chalk.cyan('raw (features disabled, region-matched)');
+    console.log(chalk.gray(`${report.timestamp} • Duration: ${(report.duration / 1000).toFixed(1)}s • Mode: `) + modeLabel);
     console.log();
+
+    // Feature matrix
+    if (report.providerFeatures && Object.keys(report.providerFeatures).length > 0) {
+      this.printFeatureMatrix(report);
+    }
 
     const scenarioNames = [...new Set(report.results.map(r => r.scenarioName))];
     const providerNames = report.config.providers;
@@ -258,6 +266,42 @@ export class CliReporter {
       console.log(`    ${chalk.gray('ties'.padEnd(15))} ${chalk.yellow('█'.repeat(ties.count))} ${ties.count} ties`);
     }
 
+    console.log();
+  }
+
+  private printFeatureMatrix(report: BenchmarkReport): void {
+    const providerNames = report.config.providers;
+    const featureLabels: { key: string; label: string }[] = [
+      { key: 'sessionRecording', label: 'Session Recording' },
+      { key: 'captchaSolving', label: 'CAPTCHA Solving' },
+      { key: 'sessionLogging', label: 'Session Logging' },
+      { key: 'advancedStealth', label: 'Advanced Stealth' },
+      { key: 'adBlocking', label: 'Ad Blocking' },
+      { key: 'proxy', label: 'Proxy' },
+    ];
+
+    console.log(chalk.bold('  Active Features (this run):'));
+    const featureTable = new Table({
+      head: ['Feature', ...providerNames].map(h => chalk.cyan(h)),
+      style: { head: [], border: [] },
+      colWidths: [22, ...Array(providerNames.length).fill(16)],
+    });
+
+    for (const { key, label } of featureLabels) {
+      const row = [label];
+      for (const pName of providerNames) {
+        const features = report.providerFeatures[pName];
+        if (features) {
+          const val = (features as any)[key];
+          row.push(val ? chalk.green('ON') : chalk.gray('off'));
+        } else {
+          row.push(chalk.gray('—'));
+        }
+      }
+      featureTable.push(row);
+    }
+
+    console.log(featureTable.toString());
     console.log();
   }
 }

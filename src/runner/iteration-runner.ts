@@ -42,6 +42,7 @@ export class IterationRunner {
           config: {
             concurrency: this.config.concurrency,
             timeout: this.config.timeout,
+            mode: this.config.mode,
           },
         };
 
@@ -82,6 +83,7 @@ export class IterationRunner {
         config: {
           concurrency: this.config.concurrency,
           timeout: this.config.timeout,
+          mode: this.config.mode,
         },
       };
 

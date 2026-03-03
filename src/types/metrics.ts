@@ -56,6 +56,15 @@ export interface ScenarioResult {
   successRate: number;
 }
 
+export interface ProviderFeaturesInfo {
+  sessionRecording: boolean;
+  captchaSolving: boolean;
+  sessionLogging: boolean;
+  advancedStealth: boolean;
+  adBlocking: boolean;
+  proxy: boolean;
+}
+
 export interface BenchmarkReport {
   runId: string;
   timestamp: string;
@@ -65,7 +74,9 @@ export interface BenchmarkReport {
     iterations: number;
     warmupIterations: number;
     concurrency: number;
+    mode: string;
   };
+  providerFeatures: Record<string, ProviderFeaturesInfo>;
   results: ScenarioResult[];
   duration: number;
 }
@@ -90,7 +101,9 @@ export interface SerializableBenchmarkReport {
     iterations: number;
     warmupIterations: number;
     concurrency: number;
+    mode: string;
   };
+  providerFeatures: Record<string, ProviderFeaturesInfo>;
   results: SerializableScenarioResult[];
   duration: number;
 }

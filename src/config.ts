@@ -1,4 +1,4 @@
-import type { BenchmarkConfig, CliOptions } from './types/config.js';
+import type { BenchmarkConfig, BenchmarkMode, CliOptions } from './types/config.js';
 import { getAvailableProviders } from './providers/index.js';
 import { getScenarioNames } from './scenarios/index.js';
 
@@ -13,6 +13,7 @@ const DEFAULTS: BenchmarkConfig = {
   generateHtml: true,
   listScenarios: false,
   verbose: false,
+  mode: 'raw',
 };
 
 export function resolveConfig(cliOpts: CliOptions): BenchmarkConfig {
@@ -53,6 +54,8 @@ export function resolveConfig(cliOpts: CliOptions): BenchmarkConfig {
       ? parseInt(envTimeout, 10)
       : DEFAULTS.timeout;
 
+  const mode: BenchmarkMode = cliOpts.mode === 'default' ? 'default' : 'raw';
+
   return {
     providers,
     scenarios,
@@ -64,5 +67,6 @@ export function resolveConfig(cliOpts: CliOptions): BenchmarkConfig {
     generateHtml: cliOpts.html !== false,
     listScenarios: cliOpts.listScenarios || false,
     verbose: cliOpts.verbose || false,
+    mode,
   };
 }

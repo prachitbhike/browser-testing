@@ -13,7 +13,7 @@ export class ConcurrentSessionsScenario implements Scenario {
   async execute(context: ScenarioContext): Promise<MetricSample[]> {
     const collector = new MetricsCollector();
     const maxConcurrency = context.config.concurrency;
-    const provider = createProvider(context.providerName);
+    const provider = createProvider(context.providerName, context.config.mode);
 
     // Test at multiple scaling levels
     const levels = [...new Set([1, 3, 5, maxConcurrency].filter(n => n > 0 && n <= maxConcurrency))].sort((a, b) => a - b);

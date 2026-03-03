@@ -26,6 +26,7 @@ program
   .option('-o, --output <dir>', 'Output directory for reports')
   .option('--no-html', 'Skip HTML report generation')
   .option('--list-scenarios', 'List all available scenarios and exit')
+  .option('-m, --mode <mode>', 'Benchmark mode: "raw" (features disabled, region-matched) or "default" (out-of-the-box provider settings)', 'raw')
   .option('-v, --verbose', 'Enable verbose/debug logging')
   .action(async (opts: CliOptions) => {
     try {

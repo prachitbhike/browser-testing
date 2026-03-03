@@ -1,3 +1,5 @@
+export type BenchmarkMode = 'raw' | 'default';
+
 export interface BenchmarkConfig {
   providers: string[];
   scenarios: string[];
@@ -9,6 +11,7 @@ export interface BenchmarkConfig {
   generateHtml: boolean;
   listScenarios: boolean;
   verbose: boolean;
+  mode: BenchmarkMode;
 }
 
 export interface CliOptions {
@@ -22,4 +25,5 @@ export interface CliOptions {
   html?: boolean;
   listScenarios?: boolean;
   verbose?: boolean;
+  mode?: string;
 }

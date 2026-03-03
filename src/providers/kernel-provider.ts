@@ -1,13 +1,15 @@
 import Kernel from '@onkernel/sdk';
 import { BaseProvider, type PlatformSession } from './base-provider.js';
+import type { ProviderFeatures } from '../types/provider.js';
+import type { BenchmarkMode } from '../types/config.js';
 import { logger } from '../utils/logger.js';
 
 export class KernelProvider extends BaseProvider {
   readonly name = 'kernel';
   private client: Kernel;
 
-  constructor() {
-    super();
+  constructor(mode: BenchmarkMode = 'raw') {
+    super(mode);
     const apiKey = process.env.KERNEL_API_KEY;
     if (!apiKey) throw new Error('KERNEL_API_KEY is required');
     this.client = new Kernel({ apiKey });
@@ -38,5 +40,17 @@ export class KernelProvider extends BaseProvider {
       logger.error(`Kernel health check failed: ${err}`);
       return false;
     }
+  }
+
+  getEnabledFeatures(): ProviderFeatures {
+    // Kernel does not offer these features regardless of mode
+    return {
+      sessionRecording: false,
+      captchaSolving: false,
+      sessionLogging: false,
+      advancedStealth: false,
+      adBlocking: false,
+      proxy: false,
+    };
   }
 }
